@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+import User from '../resources/user/user.model'
 
 export const newToken = user => {
     return jwt.sign({ id: user.id }, 'my_secret', {
@@ -14,8 +15,32 @@ export const verifyToken = token =>
         })
     })
 
-export const signin = async (req, res) => {}
+export const signin = (req, res) => {
+    
+    if (!User.userIdExists(req.params.userId)) {
+        return res.status(401).json({
+            statusCode: 401,
+            message: 'Invalid Username or Password'
+        })
+    }
+    
+    const user = User.getUser(req.params.id);
+    const match = user.checkPassword(req.params.password);
 
-export const protect = async (req, res, next) => {
+    if (match) {
+        return res.json({
+            token: newToken(user)
+        })
+    } 
+    else {
+        return res.status(401).json({
+            statusCode: 401,
+            message: 'Invalid Username or Password'
+        })
+    }
+
+}
+
+export const protect = (req, res, next) => {
     next()
 }
