@@ -7,7 +7,6 @@ export default class User {
     email: string
     hashedPassword: string = ''
 
-
     static users: User[] = [];
 
     constructor(userID: string, firstName: string, lastName: string, email: string, password: string) {

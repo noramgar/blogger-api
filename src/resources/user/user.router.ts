@@ -4,7 +4,7 @@ import User from './user.model'
 
 const router = Router()
 
-router.get('/Users', (req, res) => {
+router.get('/', (req, res) => {
     res.json(User.users)
 })
 
