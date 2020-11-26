@@ -22,4 +22,13 @@ export default class Post {
     save() {
         Post.posts.push(this)
     }
+
+    static postExists(id) {
+        for (let i = 0; i < Post.posts.length; i++) {
+            if (Post.posts[i].postId == id) {
+                return true
+            }
+        }
+        return false
+    }
 }

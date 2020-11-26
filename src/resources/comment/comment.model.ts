@@ -5,6 +5,7 @@ export default class Comment {
     postId: string
     commentDate: Date
     static counter: number = 0
+    static comments: any[]
 
     constructor(comment, userId, postId, commentDate) {
         this.commentId = Comment.counter++
@@ -13,4 +14,6 @@ export default class Comment {
         this.postId = postId
         this.commentDate = commentDate    
     }
+
+    
 }
