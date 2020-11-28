@@ -22,30 +22,36 @@ router.get('/:userId', (req, res) => {
 
 router.post('/', (req, res) => {
     
-    if (!req.body.userID || 
+    if (!req.body.userId || 
         !req.body.firstName || 
         !req.body.lastName || 
-        !req.body.email || 
+        !req.body.emailAddress || 
         !req.body.password ||
-        req.body.userID.trim() === ''
-        ) 
+        req.body.userId.trim() === '') 
         {
-        res.status(400).json({
-            message: "invalid request"
+        res.status(406).json({
+            message: "invalid request",
+            status: 406
         })
     }
 
-    else if (User.userIdExists(req.body.userID)) {
-        res.status(403).json({
-            message: "username is taken"
+    else if (User.userIdExists(req.body.userId)) {
+        res.status(409).json({
+            message: "username is taken",
+            status: 409
         })
     }
     
     else {
-        const newUser = new User(req.body.userID, req.body.firstName, req.body.lastName, req.body.email, req.body.password)
+        const newUser = new User(req.body.userId, req.body.firstName, req.body.lastName, req.body.emailAddress, req.body.password)
         newUser.save()
 
-        res.status(201).json(newUser)   
+        res.status(201).json({
+            userId: newUser.userId,
+            firstName: newUser.firstName,
+            lastName: newUser.lastName,
+            emailAddress: newUser.emailAddress
+        })   
     }
 })
 

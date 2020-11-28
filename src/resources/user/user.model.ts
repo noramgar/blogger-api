@@ -1,42 +1,43 @@
 import bcrypt from 'bcrypt';
+import { resolve } from 'path';
 
 export default class User {
-    userID: string
+    userId: string
     firstName: string
     lastName: string
-    email: string
-    hashedPassword: string = ''
+    emailAddress: string
+    hashedPassword: string
 
     static users: User[] = [];
 
-    constructor(userID: string, firstName: string, lastName: string, email: string, password: string) {
-        this.userID = userID;
+    constructor(userId: string, firstName: string, lastName: string, emailAddress: string, password: string) {
+        this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
-        this.hashPassword(password);
+        this.emailAddress = emailAddress;
+        this.hashedPassword = this.hashPassword(password)
     }
 
     save() {
         User.users.push(this)
     }
 
-    static userIdExists(userID: String) {
+    static userIdExists(userId: String) {
         for (const user of User.users) {
-            if (user.userID === userID) {
+            if (user.userId === userId) {
                 return true;
             }
         }
         return false;
     }
     
-    static deleteUser(userID: String) {
-        User.users = User.users.filter(user => user.userID !== userID)
+    static deleteUser(userId: String) {
+        User.users = User.users.filter(user => user.userId !== userId)
     }
 
     static getUser(id: String) {
         for (const user of User.users) {
-            if (user.userID === id) {
+            if (user.userId === id) {
                 return user;
             }
         }
@@ -45,7 +46,7 @@ export default class User {
     update(props: any) {
         for (let prop in this) {
             
-            if (prop === 'userID') {
+            if (prop === 'userId') {
                 continue
             }
 
@@ -66,8 +67,6 @@ export default class User {
     }
 
     hashPassword(password) {
-        bcrypt.hash(password, 10, (err, hash) => {
-            this.hashedPassword = hash
-        })
+        return bcrypt.hashSync(password, 10)
     }
 }
