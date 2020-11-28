@@ -1,12 +1,23 @@
 import Router from 'express'
 import { protect } from '../../utils/auth';
+import PostCategory from '../post-category/post-category.model';
 import User from '../user/user.model';
 import Post from './post.model'
 
 const router = Router();
 
-router.get('/', (req, res) => {
-    res.json(Post.posts)
+router.get('/', (req, res) => {    
+    let posts = Post.posts.map(post => {
+        return {
+            postId: post.postId,
+            createdDate: Post.formatDate(post.createdDate),
+            title: post.title,
+            content: post.content,
+            userId: post.userId,
+            lastUpdated: Post.formatDate(post.lastUpdated)
+        }
+    })
+    res.json(posts)
 })
 
 router.get('/:postId', (req, res) => {

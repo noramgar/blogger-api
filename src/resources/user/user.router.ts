@@ -46,7 +46,16 @@ router.post('/', (req, res) => {
 router.use(protect)
 
 router.get('/', (req, res) => {
-    res.json(User.users)
+    let users = User.users.map(user => {
+        return {
+            userId: user.userId,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            emailAddress: user.emailAddress
+        }
+    })
+    
+    res.json(users)
 })
 
 router.get('/:userId', (req, res) => {
