@@ -1,6 +1,7 @@
 import Router from 'express'
 import { newToken, signin, protect } from '../../utils/auth'
 import User from './user.model'
+import * as EmailValidator from 'email-validator';
 
 const router = Router()
 
@@ -11,12 +12,13 @@ router.post('/', (req, res) => {
     if (!req.body.userId || 
         !req.body.firstName || 
         !req.body.lastName || 
-        !req.body.emailAddress || 
+        !req.body.emailAddress ||
+        !EmailValidator.validate(req.body.emailAddress) ||
         !req.body.password ||
         req.body.userId.trim() === '') 
         {
         res.status(406).json({
-            message: "invalid request",
+            message: "Not Acceptable: Bad data in the entity",
             status: 406
         })
     }
