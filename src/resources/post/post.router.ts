@@ -1,4 +1,5 @@
 import Router from 'express'
+import { protect } from '../../utils/auth';
 import User from '../user/user.model';
 import Post from './post.model'
 
@@ -23,6 +24,20 @@ router.get('/:postId', (req, res) => {
         status: 404
     })
 })
+
+router.get('/User/:userId', (req, res) => {
+    if (!User.userIdExists(req.params.userId)) {
+        return res.status(404).json({
+            message: 'Invalid User',
+            status: 404
+        })
+    }
+
+    let posts = Post.posts.filter(post => post.userId === req.params.userId)
+    return res.status(200).json(posts)
+})
+
+router.use(protect)
 
 router.post('/', (req, res) => {
     let title = req.body.title
@@ -50,16 +65,8 @@ router.post('/', (req, res) => {
     })
 })
 
-router.get('/User/:userId', (req, res) => {
-    if (!User.userIdExists(req.params.userId)) {
-        return res.status(404).json({
-            message: 'Invalid User',
-            status: 404
-        })
-    }
+router.patch('/:postId', (req, res) => {})
 
-    let posts = Post.posts.filter(post => post.userId === req.params.userId)
-    return res.status(200).json(posts)
-})
+router.delete('/:postId', (req, res) => {})
 
 export default router

@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import Post from '../post/post.model';
 import Comment from '../comment/comment.model'
+import { protect } from '../../utils/auth';
 
 const router = Router();
 
@@ -26,6 +27,8 @@ router.get('/:postId', (req, res) => {
 
     return res.status(200).json(results)
 })
+
+router.use(protect)
 
 router.post('/:postId', (req, res) => {
     if (!Post.postExists(req.params.postId)) {

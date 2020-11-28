@@ -2,8 +2,18 @@ import jwt from 'jsonwebtoken'
 import User from '../resources/user/user.model'
 
 export const newToken = user => {
-    return jwt.sign({ id: user.id }, 'my_secret', {
-        expiresIn: '1h'
+    return jwt.sign({ 
+        UserData: {
+            userId: user.userId,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            emailAddress: user.emailAddress
+        } 
+    }, 
+    'my_secret', 
+    {
+        expiresIn: '1h',
+        subject: user.userId
     })
 }
 
@@ -15,7 +25,7 @@ export const verifyToken = token =>
         })
     })
 
-export const signin = (req, res) => {
+export const signin = async (req, res) => {
     
     if (!User.userIdExists(req.params.userId)) {
         return res.status(401).json({
@@ -24,8 +34,8 @@ export const signin = (req, res) => {
         })
     }
     
-    const user = User.getUser(req.params.id);
-    const match = user.checkPassword(req.params.password);
+    const user = User.getUser(req.params.userId);
+    const match = await user.checkPassword(req.params.password);
 
     if (match) {
         return res.json({
@@ -41,6 +51,44 @@ export const signin = (req, res) => {
 
 }
 
-export const protect = (req, res, next) => {
+export const protect = async (req, res, next) => {
+
+    let authHeader = req.headers.authorization
+    let token;
+    if (authHeader) {
+        token = authHeader.split('Bearer ')[1]
+    }
+
+    if (!authHeader || !token || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({
+            message: 'Invalid Authorization Header',
+            status: 401
+        })
+    }
+
+    token = token.trim()
+    console.log('split:', token)
+    let payload: any;
+
+    try {
+        payload = await verifyToken(token)
+    } catch(e) {
+        console.error(e)
+        return res.status(401).json({
+            message: 'Unauthorized - Access token is missing or invalid',
+            status: 401
+        })
+    }
+
+    const user = User.userIdExists(payload.UserData.userId)
+    if (!user) {
+        return res.status(401).json({
+            message: 'Unauthorized - Access token is missing or invalid',
+            status: 401
+        })
+    }
+
+    req.user = User.getUser(payload.UserData.userId)
+
     next()
 }

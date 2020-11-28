@@ -1,24 +1,10 @@
 import Router from 'express'
-import { signin } from '../../utils/auth'
+import { newToken, signin, protect } from '../../utils/auth'
 import User from './user.model'
 
 const router = Router()
 
-router.get('/', (req, res) => {
-    res.json(User.users)
-})
-
-router.get('/:userId', (req, res) => {
-    if (User.userIdExists(req.params.userId)) {
-        res.json(User.getUser(req.params.userId))
-    }
-    else {
-        res.status(404).json({
-            statusCode: 404,
-            message: "User not found"
-        })
-    }
-})
+router.get('/:userId/:password', signin)
 
 router.post('/', (req, res) => {
     
@@ -46,12 +32,32 @@ router.post('/', (req, res) => {
         const newUser = new User(req.body.userId, req.body.firstName, req.body.lastName, req.body.emailAddress, req.body.password)
         newUser.save()
 
+        console.log('token: ', newToken(newUser))
+
         res.status(201).json({
             userId: newUser.userId,
             firstName: newUser.firstName,
             lastName: newUser.lastName,
             emailAddress: newUser.emailAddress
         })   
+    }
+})
+
+router.use(protect)
+
+router.get('/', (req, res) => {
+    res.json(User.users)
+})
+
+router.get('/:userId', (req, res) => {
+    if (User.userIdExists(req.params.userId)) {
+        res.json(User.getUser(req.params.userId))
+    }
+    else {
+        res.status(404).json({
+            statusCode: 404,
+            message: "User not found"
+        })
     }
 })
 
@@ -72,8 +78,9 @@ router.patch('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
     if (User.userIdExists(req.params.id)) {
         User.deleteUser(req.params.id);
-        res.json({
-            message: "User Deleted" 
+        res.status(204).json({
+            message: "User Deleted",
+            status: 204
         })
     }
     else {
@@ -83,7 +90,5 @@ router.delete('/:id', (req, res) => {
         })
     }
 })
-
-router.get('/:userId/:password', signin)
 
 export default router

@@ -1,4 +1,5 @@
 import Router from 'express'
+import { protect } from '../../utils/auth';
 import PostCategory from '../post-category/post-category.model';
 import Category from './category.model';
 
@@ -6,25 +7,6 @@ const router = Router();
 
 router.get('/', (req, res) => {
     res.status(200).json(Category.categories)
-})
-
-router.post('/', (req, res) => {
-    
-    if (Category.categoryExists(req.body.categoryName)) {
-        return res.status(409).json({
-            message: "Conflict, duplicate categoryName",
-            status: 409
-        })
-    }
-
-    const cat = new Category(req.body.categoryName, req.body.categoryDescription)
-    Category.categories.push(cat)
-
-    return res.status(201).json({
-        categoryId: cat.categoryId,
-        categoryName: cat.categoryName,
-        categoryDescription: cat.categoryDescription
-    })
 })
 
 router.get('/:categoryId', (req, res) => {
@@ -46,6 +28,27 @@ router.get('/:categoryId', (req, res) => {
     return res.status(404).json({
         message: "Category not Found",
         status: 404
+    })
+})
+
+router.use(protect)
+
+router.post('/', (req, res) => {
+    
+    if (Category.categoryExists(req.body.categoryName)) {
+        return res.status(409).json({
+            message: "Conflict, duplicate categoryName",
+            status: 409
+        })
+    }
+
+    const cat = new Category(req.body.categoryName, req.body.categoryDescription)
+    Category.categories.push(cat)
+
+    return res.status(201).json({
+        categoryId: cat.categoryId,
+        categoryName: cat.categoryName,
+        categoryDescription: cat.categoryDescription
     })
 })
 
