@@ -15,9 +15,12 @@ router.get('/:postId', (req, res) => {
         }
     }
     if (match) {
-        return res.json(match)
+        return res.status(200).json(match)
     }
-    return res.status(404).send('post does not exist')
+    return res.status(404).json({
+        message: 'post does not exist',
+        status: 404
+    })
 })
 
 router.post('/', (req, res) => {
@@ -33,6 +36,8 @@ router.post('/', (req, res) => {
     }
 
     let post = new Post(title, content, headerImage, '**USER**')
+    post.save()
+
     return res.status(201).json({
         postId: post.postId,
         createdDate: post.createdDate,
