@@ -21,6 +21,27 @@ router.get('/:postId', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-    
+    let title = req.body.title
+    let content = req.body.content
+    let headerImage = req.body.headerImage
+
+    if (!title || !content) {
+        return res.status(406).json({
+            message: 'Not Acceptable - Missing title or content',
+            status: 406
+        })
+    }
+
+    let post = new Post(title, content, headerImage, '**USER**')
+    return res.status(201).json({
+        postId: post.postId,
+        createdDate: post.createdDate,
+        title: post.title,
+        content: post.content,
+        userId: post.userId,
+        headerImage: post.headerImage,
+        lastUpdated: post.lastUpdated
+    })
 })
+
 export default router

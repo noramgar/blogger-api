@@ -9,14 +9,14 @@ export default class Post {
     static counter: number = 0
     static posts: Post[] = []
 
-    constructor(createdDate, title, content, userId, headerImage, lastUpdated) {
+    constructor(title, content, headerImage, userId) {
         this.postId = Post.counter++
-        this.createdDate = createdDate
+        this.createdDate = new Date()
         this.title = title
         this.content = content
         this.userId = userId
         this.headerImage = headerImage
-        this.lastUpdated = lastUpdated
+        this.lastUpdated = this.createdDate
     }
 
     save() {
