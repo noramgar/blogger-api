@@ -5,15 +5,17 @@ export default class Comment {
     postId: string
     commentDate: Date
     static counter: number = 0
-    static comments: any[]
+    static comments: Comment[] = []
 
-    constructor(comment, userId, postId, commentDate) {
+    constructor(comment, userId, postId) {
         this.commentId = Comment.counter++
         this.comment = comment
         this.userId = userId
         this.postId = postId
-        this.commentDate = commentDate    
+        this.commentDate = new Date()   
     }
 
-    
+    save() {
+        Comment.comments.push(this)
+    }
 }

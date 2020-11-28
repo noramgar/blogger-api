@@ -51,7 +51,6 @@ router.post('/', (req, res) => {
 })
 
 router.get('/User/:userId', (req, res) => {
-    console.log('userId: ', req.params.userId)
     if (!User.userIdExists(req.params.userId)) {
         return res.status(404).json({
             message: 'Invalid User',
@@ -60,8 +59,6 @@ router.get('/User/:userId', (req, res) => {
     }
 
     let posts = Post.posts.filter(post => post.userId === req.params.userId)
-    console.log(posts)
-
     return res.status(200).json(posts)
 })
 
