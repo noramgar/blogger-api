@@ -1,7 +1,6 @@
 import { Router } from 'express'
 import Post from '../post/post.model';
 import Comment from '../comment/comment.model'
-import { resolveAny } from 'dns';
 
 const router = Router();
 
@@ -42,6 +41,36 @@ router.post('/:postId', (req, res) => {
     return res.status(201).json(comment)
 })
 
+router.patch('/:postId/:commentId', (req, res) => {
+    if (!Comment.commentExists(req.params.commentId)) {
+        return res.status(404).json({
+            message: 'Comment or Post not found',
+            status: 404
+        })
+    }
 
+    let comment = Comment.getComment(req.params.commentId, req.params.postId)
+    comment.comment = req.body.comment
+
+    return res.status(201).json(comment)
+})
+
+router.delete('/:postId/:commentId', (req, res) => {
+    if (!Comment.commentExists(req.params.commentId)) {
+        return res.status(404).json({
+            message: 'Comment or Post not found',
+            status: 404
+        })
+    }
+
+    Comment.comments = Comment.comments.filter(comment => {
+        return (comment.commentId + '') != req.params.commentId
+    })
+
+    return res.status(204).json({
+        message: 'Comment removed from Post',
+        status: 204
+    })
+})
 
 export default router

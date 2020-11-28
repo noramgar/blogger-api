@@ -18,4 +18,21 @@ export default class Comment {
     save() {
         Comment.comments.push(this)
     }
+
+    static getComment(commentId, postId) {
+        for (let comment of Comment.comments) {
+            if (comment.commentId == commentId && comment.postId == postId) {
+                return comment
+            }
+        }
+    }
+
+    static commentExists(commentId) {
+        for (const comment of Comment.comments) {
+            if (Comment.comments === commentId) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
