@@ -15,7 +15,7 @@ router.post('/', (req, res) => {
         !req.body.emailAddress ||
         !EmailValidator.validate(req.body.emailAddress) ||
         !req.body.password ||
-        req.body.userId.trim() === '') 
+        req.body.userId.trim() === '')
         {
         res.status(406).json({
             message: "Not Acceptable: Bad data in the entity",

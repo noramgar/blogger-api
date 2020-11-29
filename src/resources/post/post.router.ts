@@ -78,6 +78,26 @@ router.post('/', (req, res) => {
 
 router.patch('/:postId', (req, res) => {})
 
-router.delete('/:postId', (req, res) => {})
+router.delete('/:postId', (req, res) => {
+    if (!Post.postExists(req.params.postId)) {
+        return res.status(404).json({
+            message: 'Post not found',
+            status: 404
+        })
+    }
+
+    Post.posts = Post.posts.filter(post => {
+        return (post.postId + '') !== req.params.postId
+    })
+
+    PostCategory.postCategories = PostCategory.postCategories.filter(postCategory => {
+        return (postCategory.postId + '') !== req.params.postId
+    }) 
+
+    return res.status(204).json({
+        message: 'Post Deleted',
+        status: 204
+    })
+})
 
 export default router

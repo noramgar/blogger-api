@@ -19,10 +19,6 @@ app.use('/Categories', categoryRouter)
 app.use('/PostCategory', postCategoryRouter)
 app.use('/Comments', commentRouter)
 
-app.get('/', (req, res) => {
-  res.send('Goodbye World')
-})
-
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
