@@ -76,7 +76,40 @@ router.post('/', (req, res) => {
     })
 })
 
-router.patch('/:postId', (req, res) => {})
+router.patch('/:postId', (req, res) => {
+    if (!Post.postExists(req.params.postId)) {
+        return res.status(404).json({
+            message: 'Post not found',
+            status: 404
+        })
+    }
+
+    let post;
+    for (let p of Post.posts) {
+        if (p.postId+'' === req.params.postId) {
+            post = p
+        }
+    }
+
+    if (req.body.content) {
+        post.content = req.body.content
+    }
+
+    if (req.body.headerImage) {
+        post.headerImage = req.body.headerImage
+    }
+
+    post.lastUpdated = new Date()
+
+    return res.status(200).json({
+        postId: post.postId,
+        createdDate: Post.formatDate(post.createdDate),
+        title: post.title,
+        content: post.content,
+        userId: post.userId,
+        lastUpdated: Post.formatDate(post.lastUpdated)
+    })
+})
 
 router.delete('/:postId', (req, res) => {
     if (!Post.postExists(req.params.postId)) {
