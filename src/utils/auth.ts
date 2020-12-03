@@ -12,7 +12,7 @@ export const newToken = user => {
     }, 
     'my_secret', 
     {
-        expiresIn: '1h',
+        expiresIn: '3h',
         subject: user.userId
     })
 }

@@ -76,7 +76,12 @@ router.patch('/:id', (req, res) => {
     if (User.userIdExists(req.params.id)) {
         const user = User.getUser(req.params.id)
         user?.update(req.body)
-        res.json(user)
+        res.json({
+            userId: user.userId,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            emailAddress: user.emailAddress
+        })
     }
     else {
         res.status(404).json({
