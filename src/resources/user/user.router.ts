@@ -73,6 +73,14 @@ router.get('/:userId', (req, res) => {
 })
 
 router.patch('/:id', (req, res) => {
+    
+    if (!EmailValidator.validate(req.body.emailAddress)) {
+        return res.status(406).json({
+            message: "Not Acceptable: Bad data in the entity",
+            status: 406
+        })
+    }
+    
     if (User.userIdExists(req.params.id)) {
         const user = User.getUser(req.params.id)
         user?.update(req.body)
@@ -84,7 +92,7 @@ router.patch('/:id', (req, res) => {
         })
     }
     else {
-        res.status(404).json({
+        return res.status(404).json({
             statusCode: 404,
             message: "User not found"
         })
