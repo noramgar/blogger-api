@@ -64,7 +64,11 @@ router.patch('/:postId/:commentId', (req, res) => {
 })
 
 router.delete('/:postId/:commentId', (req, res) => {
-    if (!Comment.commentExists(req.params.commentId)) {
+    let foundComment = Comment.comments.find(c => {
+        return c.commentId+'' == req.params.commentId && c.postId+'' == req.params.postId
+    })
+    
+    if (!foundComment) {
         return res.status(404).json({
             message: 'Comment or Post not found',
             status: 404

@@ -34,8 +34,6 @@ router.post('/', (req, res) => {
         const newUser = new User(req.body.userId, req.body.firstName, req.body.lastName, req.body.emailAddress, req.body.password)
         newUser.save()
 
-        console.log('token: ', newToken(newUser))
-
         res.status(201).json({
             userId: newUser.userId,
             firstName: newUser.firstName,
