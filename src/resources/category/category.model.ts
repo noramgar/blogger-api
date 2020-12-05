@@ -12,9 +12,9 @@ export default class Category {
         this.categoryDescription = categoryDescription
     }
 
-    static categoryExists(name): boolean {
+    static categoryExists(id): boolean {
         for (let i = 0; i < Category.categories.length; i++) {
-            if (Category.categories[i].categoryName == name) {
+            if (Category.categories[i].categoryId == id) {
                 return true
             }
         }

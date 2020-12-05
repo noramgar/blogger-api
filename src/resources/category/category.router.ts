@@ -20,8 +20,8 @@ router.get('/:categoryId', (req, res) => {
     if (match) {
         return res.status(200).json({
             categoryId: match.categoryId,
-            categoryName: match.name,
-            categoryDescription: match.description
+            categoryName: match.categoryName,
+            categoryDescription: match.categoryDescription
         })
     }
 

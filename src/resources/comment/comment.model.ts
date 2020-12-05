@@ -1,8 +1,8 @@
 export default class Comment {
-    commentId: number = 0
+    commentId: number
     comment: string
     userId: string
-    postId: string
+    postId: number
     commentDate: Date
     static counter: number = 0
     static comments: Comment[] = []
@@ -29,7 +29,7 @@ export default class Comment {
 
     static commentExists(commentId) {
         for (const comment of Comment.comments) {
-            if (Comment.comments === commentId) {
+            if (comment.commentId === commentId) {
                 return true;
             }
         }

@@ -75,6 +75,16 @@ router.post('/:postId/:categoryId', (req: any, res) => {
             })
         }
 
+        let duplicate = PostCategory.postCategories.find(pc => {
+            return pc.postId+'' === req.params.postId && pc.categoryId+'' === req.params.categoryId
+        })
+
+        if (duplicate) {
+            return res.status(400).json({
+                status: 400,
+                message: 'Error: duplicate PostCategory'
+            }) 
+        }
         let postcat = new PostCategory(foundCategory.categoryId, foundPost.postId)
         PostCategory.postCategories.push(postcat)
         return res.status(201).json({

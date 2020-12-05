@@ -67,7 +67,6 @@ export const protect = async (req, res, next) => {
     }
 
     token = token.trim()
-    console.log('split:', token)
     let payload: any;
 
     try {

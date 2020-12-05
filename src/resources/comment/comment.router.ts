@@ -13,7 +13,7 @@ router.get('/:postId', (req, res) => {
         })
     }
 
-    let relatedComments = Comment.comments.filter(comment => comment.postId === req.params.postId)
+    let relatedComments = Comment.comments.filter(comment => comment.postId+'' === req.params.postId)
     
     let results = relatedComments.map(comment => {
         return {
@@ -30,7 +30,7 @@ router.get('/:postId', (req, res) => {
 
 router.use(protect)
 
-router.post('/:postId', (req, res) => {
+router.post('/:postId', (req: any, res) => {
     if (!Post.postExists(req.params.postId)) {
         return res.status(404).json({
             message: 'Post Not Found',
@@ -38,14 +38,19 @@ router.post('/:postId', (req, res) => {
         })
     }
 
-    let comment = new Comment(req.body.comment, 'user', req.params.postId)
+    let comment = new Comment(req.body.comment, req.user.userId, req.params.postId)
     comment.save()
 
     return res.status(201).json(comment)
 })
 
 router.patch('/:postId/:commentId', (req, res) => {
-    if (!Comment.commentExists(req.params.commentId)) {
+    
+    let foundComment = Comment.comments.find(c => {
+        return c.commentId+'' == req.params.commentId && c.postId+'' == req.params.postId
+    })
+    
+    if (!foundComment) {
         return res.status(404).json({
             message: 'Comment or Post not found',
             status: 404

@@ -110,11 +110,12 @@ router.patch('/:postId', (req: any, res) => {
 
     return res.status(200).json({
         postId: post.postId,
-        createdDate: Post.formatDate(post.createdDate),
+        createdDate: post.createdDate,
         title: post.title,
         content: post.content,
         userId: post.userId,
-        lastUpdated: Post.formatDate(post.lastUpdated)
+        lastUpdated: post.lastUpdated,
+        headerImage: post.headerImage
     })
 })
 
